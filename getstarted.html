@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contract Inquiry Form</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-y: auto;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 600px;
+            margin: 20px;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: slideIn 0.8s ease-out forwards;
+        }
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background-color: #f9f9f9;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #6e8efb;
+            box-shadow: 0 0 8px rgba(110, 142, 251, 0.3);
+            outline: none;
+            background-color: #fff;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(to right, #6e8efb, #a777e3);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+                margin: 15px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            button {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Contract Inquiry</h1>
+    <form id="contractForm" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" name="name" required>
+            <span class="error" id="nameError">Please enter your full name.</span>
+        </div>
+        <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input type="email" id="email" name="email" required>
+            <span class="error" id="emailError">Please enter a valid email address.</span>
+        </div>
+        <div class="form-group">
+            <label for="projectType">Project Type *</label>
+            <select id="projectType" name="projectType" required>
+                <option value="">Select a project type</option>
+                <option value="web-development">Web Development</option>
+                <option value="mobile-app">MobileSCOPE App Development</option>
+                <option value="software">Custom Software</option>
+                <option value="consulting">Consulting</option>
+                <option value="other">Other</option>
+            </select>
+            <span class="error" id="projectTypeError">Please select a project type.</span>
+        </div>
+        <div class="form-group">
+            <label for="budget">Budget (USD) *</label>
+            <input type="number" id="budget" name="budget" min="0" step="100" required>
+            <span class="error" id="budgetError">Please enter a valid budget.</span>
+        </div>
+        <div class="form-group">
+            <label for="timeline">Project Timeline *</label>
+            <select id="timeline" name="timeline" required>
+                <option value="">Select a timeline</option>
+                <option value="1-3-months">1-3 Months</option>
+                <option value="3-6-months">3-6 Months</option>
+                <option value="6-12-months">6-12 Months</option>
+                <option value="12-plus-months">12+ Months</option>
+            </select>
+            <span class="error" id="timelineError">Please select a timeline.</span>
+        </div>
+        <div class="form-group">
+            <label for="details">Additional Details</label>
+            <textarea id="details" name="details" placeholder="Describe your project requirements..."></textarea>
+        </div>
+        <button type="submit">Submit Inquiry</button>
+    </form>
+</div>
+
+<script>
+    function handleSubmit(event) {
+        event.preventDefault();
+        const form = document.getElementById('contractForm');
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const projectType = document.getElementById('projectType').value;
+        const budget = document.getElementById('budget').value;
+        const timeline = document.getElementById('timeline').value;
+
+        // Reset error messages
+        document.querySelectorAll('.error').forEach(error => error.style.display = 'none');
+
+        let isValid = true;
+
+        // Validation
+        if (!name) {
+            document.getElementById('nameError').style.display = 'block';
+            isValid = false;
+        }
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            document.getElementById('emailError').style.display = 'block';
+            isValid = false;
+        }
+        if (!projectType) {
+            document.getElementById('projectTypeError').style.display = 'block';
+            isValid = false;
+        }
+        if (!budget || budget < 0) {
+            document.getElementById('budgetError').style.display = 'block';
+            isValid = false;
+        }
+        if (!timeline) {
+            document.getElementById('timelineError').style.display = 'block';
+            isValid = false;
+        }
+
+        if (isValid) {
+            const formData = {
+                name,
+                email,
+                projectType,
+                budget,
+                timeline,
+                details: document.getElementById('details').value.trim()
+            };
+            console.log('Form Data:', formData);
+
+            // Replace with your backend endpoint
+            /*
+            fetch('YOUR_BACKEND_ENDPOINT', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Thank you for your inquiry! We’ll reach out soon.');
+                form.reset();
+            })
+            .catch(error => {
+                alert('An error occurred. Please try again.');
+            });
+            */
+
+            alert('Thank you for your inquiry! We’ll reach out soon.');
+            form.reset();
+        }
+    }
+</script>
+</body>
+</html>
